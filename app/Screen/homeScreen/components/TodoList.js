@@ -7,14 +7,7 @@ import theme from '../../../components/common/theme';
 import actions from '../../../redux/actions/actions';
 
 export default function TodoList() {
-  const todos = useSelector(state => {
-    const todoOutput = state.todoOutput;
-    // return {
-    //   ...todoOutput,
-    //   value: todoOutput.value.length > 0 ? todoOutput.value : state.todoList,
-    // };
-    return todoOutput;
-  });
+  const todos = useSelector(state => state.todoOutput);
   const dispacth = useDispatch();
   const ICON_SIZE = 22;
   const isEmpty = todos.value.length === 0;

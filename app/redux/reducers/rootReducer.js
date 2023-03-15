@@ -1,102 +1,10 @@
 import actionID from '../actions/actionID';
 
 const initState = {
-  todoList: [
-    {
-      id: 0,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 1,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 2,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-    {
-      id: 3,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 4,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 5,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-    {
-      id: 6,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 7,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 8,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-    {
-      id: 10,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 11,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 12,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-    {
-      id: 13,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 14,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 15,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-    {
-      id: 16,
-      name: 'Learn Javscript',
-      status: 'finish',
-    },
-    {
-      id: 17,
-      name: 'Learn ReactJS',
-      status: 'unfinish',
-    },
-    {
-      id: 18,
-      name: 'Learn React Native',
-      status: 'unfinish',
-    },
-  ],
+  todoList: [],
   todoOutput: {
     type: 'all',
     value: [],
-    inputHistory: null,
   },
 };
 
@@ -129,6 +37,7 @@ export default function rootReducer(state = initState, action = {}) {
     case actionID.DELETE_TODO: {
       const item = payload.todo;
       let newList;
+      let outputList = [];
       switch (payload.type) {
         case 'id':
           newList = todoList.filter(todo => item.id !== todo.id);
@@ -144,18 +53,17 @@ export default function rootReducer(state = initState, action = {}) {
       }
       switch (type) {
         case 'unfinish':
-          newList = newList.filter(todo => todo.status === 'unfinish');
+          outputList = newList.filter(todo => todo.status === 'unfinish');
           break;
         case 'finish':
-          newList = newList.filter(todo => todo.status === 'finish');
+          outputList = newList.filter(todo => todo.status === 'finish');
           break;
       }
       return {
         ...state,
-        todoList: newList,
         todoOutput: {
           ...todoOutput,
-          value: newList,
+          value: outputList,
         },
       };
     }
@@ -172,7 +80,6 @@ export default function rootReducer(state = initState, action = {}) {
         todoList: newList,
         todoOutput: {
           ...todoOutput,
-          type: 'all',
           value: newList,
         },
       };
@@ -184,7 +91,6 @@ export default function rootReducer(state = initState, action = {}) {
           ...todoOutput,
           type: payload === '' ? 'all' : 'search',
           value: todoList.filter(todo => todo.name.includes(payload)),
-          inputHistory: payload,
         },
       };
     }
