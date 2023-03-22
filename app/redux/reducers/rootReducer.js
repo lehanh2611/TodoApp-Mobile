@@ -6,6 +6,12 @@ const initState = {
     type: 'all',
     value: [],
   },
+  notification: {
+    status: true,
+    text: 'Thêm công việc nào!',
+    ms: 3000,
+  },
+  updatingData: false,
 };
 
 export default function rootReducer(state = initState, action = {}) {
@@ -15,74 +21,77 @@ export default function rootReducer(state = initState, action = {}) {
   const type = todoOutput.type;
 
   switch (action.type) {
-    case actionID.ADD_TODO: {
-      const newList = [
-        ...todoList,
-        {
-          id: payload.id,
-          name: payload.name,
-          status: 'unfinish',
-        },
-      ];
+    case actionID.START_APP: {
+      return state;
+    }
+    case actionID.UPDATE_DATA_REQUEST: {
+      console.log('UPDATE_DATA_REQUEST...');
+      return state;
+    }
+    case actionID.UPDATE_DATA: {
+      const data = Object.values(payload ?? {});
+      let listOutput = data;
+      switch (type) {
+        case 'unfinish':
+          listOutput = data.filter(todo => todo.status === 'unfinish');
+          break;
+        case 'finish':
+          listOutput = data.filter(todo => todo.status === 'finish');
+          break;
+      }
+      console.log('UPDATE_DATA_REQUEST ===> DONE');
       return {
         ...state,
-        todoList: newList,
+        todoList: data,
         todoOutput: {
-          ...todoOutput,
-          value: newList,
+          ...state.todoOutput,
+          value: listOutput,
+        },
+        updatingData: false,
+      };
+    }
+    case actionID.ADD_TODO_REQUEST: {
+      console.log('ADD_TODO_REQUEST...');
+      payload.loading(true);
+      return {
+        ...state,
+        todoOutput: {
+          ...state.todoOutput,
           type: 'all',
         },
+        updatingData: true,
+      };
+    }
+    case actionID.ADD_TODO: {
+      console.log('ADD_TODO_REQUEST ===> DONE');
+      payload.loading(false);
+      return state;
+    }
+    case actionID.DELETE_TODO_REQUEST: {
+      console.log('DELETE_TODO_REQUEST...');
+      payload.loading(true);
+
+      return {
+        ...state,
+        todoOutput: {
+          ...state.todoOutput,
+        },
+        updatingData: true,
       };
     }
     case actionID.DELETE_TODO: {
-      const item = payload.todo;
-      let newList;
-      let outputList = [];
-      switch (payload.type) {
-        case 'id':
-          newList = todoList.filter(todo => item.id !== todo.id);
-          break;
-        case 'all':
-          newList = [];
-          break;
-        case 'all-done':
-          newList = todoList.filter(todo => todo.status !== 'finish');
-          break;
-        default:
-          newList = todoList;
-      }
-      switch (type) {
-        case 'unfinish':
-          outputList = newList.filter(todo => todo.status === 'unfinish');
-          break;
-        case 'finish':
-          outputList = newList.filter(todo => todo.status === 'finish');
-          break;
-      }
-      return {
-        ...state,
-        todoOutput: {
-          ...todoOutput,
-          value: outputList,
-        },
-      };
+      console.log('DELETE_TODO_REQUEST ===> DONE');
+      payload.loading(false);
+      return state;
+    }
+    case actionID.SET_STATUS_TODO_REQUEST: {
+      console.log('SET_STATUS_TODO_REQUEST...');
+      return state;
     }
     case actionID.SET_STATUS_TODO: {
-      const item = payload.todo;
-      const newList = todoList.map(todo => {
-        if (todo.id === item.id) {
-          return {...item, status: payload.status ? 'unfinish' : 'finish'};
-        }
-        return todo;
-      });
-      return {
-        ...state,
-        todoList: newList,
-        todoOutput: {
-          ...todoOutput,
-          value: newList,
-        },
-      };
+      console.log('SET_STATUS_TODO ===> DONE');
+
+      return state;
     }
     case actionID.SEARCH_TODO: {
       return {
@@ -122,6 +131,12 @@ export default function rootReducer(state = initState, action = {}) {
           type: payload,
           value: output,
         },
+      };
+    }
+    case actionID.SET_NOTIFICATION: {
+      return {
+        ...state,
+        notification: {...state.notification, ...payload},
       };
     }
     default:

@@ -9,6 +9,7 @@ import actions from '../../../redux/actions/actions';
 
 export default function AddTodoForm() {
   const [value, setValue] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispacth = useDispatch();
   const generateId = uuid.v4();
 
@@ -23,11 +24,19 @@ export default function AddTodoForm() {
         selectionColor={theme.colors.primary}
       />
       <TButton
+        loading={loading}
         onPress={() => {
           if (!value) {
             return;
           }
-          dispacth(actions.ADD_TODO({id: generateId, name: value}));
+          dispacth(
+            actions.ADD_TODO_REQUEST({
+              id: generateId,
+              name: value,
+              loading: setLoading,
+              status: 'unfinish',
+            }),
+          );
           setValue('');
           Keyboard.dismiss();
         }}

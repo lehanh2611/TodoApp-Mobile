@@ -1,12 +1,21 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import theme from './theme';
 
-export default function TButton({buttonStyle, onPress, title}) {
+export default function TButton({buttonStyle, onPress, title, loading}) {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={loading ? () => {} : onPress}
       style={{...styles.container, ...buttonStyle}}>
-      <Text style={styles.text}> {title}</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#ffffff" />
+      ) : (
+        <Text style={styles.text}> {title}</Text>
+      )}
     </TouchableOpacity>
   );
 }

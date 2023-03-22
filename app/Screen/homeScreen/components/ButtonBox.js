@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
@@ -6,6 +7,8 @@ import theme from '../../../components/common/theme';
 import actions from '../../../redux/actions/actions';
 
 export default function ButtonBox() {
+  const [loadingDeleteAll, setLoadingDeleteAll] = useState(false);
+  const [loadingDeleteDone, setLoadingDeleteDone] = useState(false);
   const dispacth = useDispatch();
 
   return (
@@ -13,12 +16,28 @@ export default function ButtonBox() {
       <TButton
         title="Delete All"
         buttonStyle={styles.button}
-        onPress={() => dispacth(actions.DELETE_TODO({type: 'all'}))}
+        loading={loadingDeleteAll}
+        onPress={() =>
+          dispacth(
+            actions.DELETE_TODO_REQUEST({
+              type: 'all',
+              loading: setLoadingDeleteAll,
+            }),
+          )
+        }
       />
       <TButton
         title="Delete All Done"
         buttonStyle={styles.button}
-        onPress={() => dispacth(actions.DELETE_TODO({type: 'all-done'}))}
+        loading={loadingDeleteDone}
+        onPress={() =>
+          dispacth(
+            actions.DELETE_TODO_REQUEST({
+              type: 'all-done',
+              loading: setLoadingDeleteDone,
+            }),
+          )
+        }
       />
     </View>
   );
